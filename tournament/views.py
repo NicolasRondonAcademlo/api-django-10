@@ -7,8 +7,12 @@ import json
 # Create your views here.
 @csrf_exempt
 def list_teams(request):
+    print(request.content_params)
     if request.method == 'GET':
-        teams = Team.objects.all()
+        if "country" in request.GET:
+            teams = Team.objects.filter(country=request.GET["country"])
+        else:
+            teams = Team.objects.all()
         return JsonResponse(serializers.serialize(queryset=teams, format='json'), safe=False)
 
     if request.method == 'POST':
