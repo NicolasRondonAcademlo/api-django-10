@@ -38,7 +38,7 @@ def list_publications(request):
             }
         })
 
-class PublicationsList(generics.ListAPIView):
+class PublicationsList(generics.ListCreateAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
 
@@ -46,3 +46,10 @@ class PublicationsList(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = PublicationSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PublicationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
