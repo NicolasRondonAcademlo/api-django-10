@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
-from .serializers import PublicationSerializer
+from .serializers import PublicationSerializer, CreatePublicationSerializer
 
 @api_view(['POST', "GET"])
 def list_publications(request):
@@ -48,7 +48,7 @@ class PublicationsList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = PublicationSerializer(data=request.data)
+        serializer = CreatePublicationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
