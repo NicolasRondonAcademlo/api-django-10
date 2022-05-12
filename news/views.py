@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Publication
@@ -10,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from .serializers import PublicationSerializer, CreatePublicationSerializer
+from rest_framework import viewsets
 
 @api_view(['POST', "GET"])
 def list_publications(request):
@@ -42,6 +44,7 @@ class PublicationsList(generics.ListCreateAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
 
+    
     def list(self, request):
         queryset = self.get_queryset()
         serializer = PublicationSerializer(queryset, many=True)
@@ -54,4 +57,8 @@ class PublicationsList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        
+
+
+class PublicationViewset(viewsets.ModelViewSet):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationSerializer
